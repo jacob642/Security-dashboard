@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Security Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="dashboard-shell">
+        <header class="panel welcome">
+            <h1>Security Dashboard</h1>
+            <p>Welcome to the Security Dashboard</p>
+        </header>
+
+        <section class="panel severity">
+            <h2>Severity Summary</h2>
+            <div class="severity-grid">
+                <div class="severity-item">
+                    <div class="severity-label critical">Critical:</div>
+                    <div class="severity-value" id="critical-count">0</div>
+                </div>
+                <div class="severity-item">
+                    <div class="severity-label high">High:</div>
+                    <div class="severity-value" id="high-count">0</div>
+                </div>
+                <div class="severity-item">
+                    <div class="severity-label medium">Medium:</div>
+                    <div class="severity-value" id="medium-count">0</div>
+                </div>
+                <div class="severity-item">
+                    <div class="severity-label low">Low:</div>
+                    <div class="severity-value" id="low-count">0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel alert-summary">
+            <h2>Alert Summary</h2>
+            <p>No alerts currently available.</p>
+        </section>
+
+        <div class="dashboard-grid">
+            <section class="panel card security-events">
+                <h2>Security Events</h2>
+                <p>No recent security events.</p>
+            </section>
+
+            <section class="panel card attacks-over-time">
+                <h2>Attacks Over Time</h2>
+                <p>Attack data will appear here.</p>
+            </section>
+
+            <section class="panel card top-attacking-ips">
+                <h2>Top Attacking IPs</h2>
+                <p>No attacking IPs recorded.</p>
+            </section>
+
+            <section class="panel card event-logs">
+                <h2>Event Logs</h2>
+                <p>No event logs available.</p>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
