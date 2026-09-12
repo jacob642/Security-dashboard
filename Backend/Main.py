@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from fastapi import FastAPI
 
+from Backend.database import get_ip_addresses as fetch_ip_addresses, get_security_events
+
 
 #initialize FastAPI app
 app = FastAPI()
@@ -23,3 +25,13 @@ def get_security_data():
 @app.get("/api/health")
 def health_check():
     return {"status": "ok"}
+
+## getting alert data from the database and returning it as a JSON response
+@app.get("/alerts")
+def get_alerts():
+    return get_security_events()
+
+
+@app.get("/IP-addresses")
+def get_ip_addresses():
+    return fetch_ip_addresses()
