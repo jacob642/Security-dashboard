@@ -34,3 +34,4 @@ function increaseAlertCount(severity) {
     updateSeverityCounts();
 }
 
+
