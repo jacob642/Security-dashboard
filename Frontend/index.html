@@ -41,33 +41,38 @@
 
         <section class="panel alert-summary">
             <h2>Alert Summary</h2>
-            <p>No alerts currently available.</p>
+            <div id="alert-summary-list" class="alert-summary-list"></div>
         </section>
 
         <div class="dashboard-grid">
             <section class="panel card security-events">
                 <h2>Security Events</h2>
-                <p>No recent security events.</p>
+                <div id="security-events-list" class="security-events-list"></div>
             </section>
 
             <section class="panel card attacks-over-time">
                 <h2>Attacks Over Time</h2>
-                <p>Attack data will appear here.</p>
+                <canvas id="attacks-over-time-chart" aria-label="Attacks over time chart"></canvas>
             </section>
 
             <section class="panel card top-attacking-ips">
                 <h2>Top Attacking IPs</h2>
-                <p>No attacking IPs recorded.</p>
+                <div id="top-attacking-ips-list" class="attacking-ips-list"></div>
             </section>
 
             <section class="panel card event-logs">
                 <h2>Event Logs</h2>
-                <p>No event logs available.</p>
+                <div id="event-logs-list" class="event-logs-list"></div>
             </section>
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
     <script src="script.js"></script>
+   
+    <script src="mockdata.js"></script>
+    <script src="tests/tests.js"></script>
+   
 </body>
 
 </html>
