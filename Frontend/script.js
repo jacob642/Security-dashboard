@@ -5,6 +5,17 @@ async function loadData() {
     //collecting data from security events table
     const alertsResponse = await fetch ("http://127.0.0.1:8003/alerts");
     const alerts = await alertsResponse.json();
+    // counting the each severity tag
+    const severityCount = {
+        Critical: 0,
+        High: 0,
+        Medium: 0,
+        Low: 0,        
+    };
+   alerts.forEach((event) => {
+    severityCount[event.severity]++;
+});
+    showSeverityCounts(severityCount);
     //collecting data from IP address table
     const ipResponse = await fetch ("http://127.0.0.1:8003/IP-addresses")
     const ips = await ipResponse.json();
@@ -38,41 +49,14 @@ ipList.innerHTML = ips.map((ip) => `
     </div>
 `).join(""); 
 }
+
+function showSeverityCounts(severityCount) {
+    document.getElementById("critical-count").textContent = severityCount.Critical;
+    document.getElementById("high-count").textContent = severityCount.High;
+    document.getElementById("medium-count").textContent = severityCount.Medium;
+    document.getElementById("low-count").textContent = severityCount.Low;
+}
+
 loadData();
-    
-
-// keeping the severity totals in local variables
-let criticalCount = 0;
-let highCount = 0;
-let mediumCount = 0;
-let lowCount = 0;
-
-// update the values displayed in the summary panel
-function updateSeverityCounts() {
-    const criticalEl = document.getElementById("critical-count");
-    const highEl = document.getElementById("high-count");
-    const mediumEl = document.getElementById("medium-count");
-    const lowEl = document.getElementById("low-count");
-
-    if (criticalEl) criticalEl.textContent = criticalCount;
-    if (highEl) highEl.textContent = highCount;
-    if (mediumEl) mediumEl.textContent = mediumCount;
-    if (lowEl) lowEl.textContent = lowCount;
-}
-
-// function to call when a new alert is created
-function increaseAlertCount(severity) {
-    if (severity === "Critical") {
-        criticalCount++;
-    } else if (severity === "High") {
-        highCount++;
-    } else if (severity === "Medium") {
-        mediumCount++;
-    } else if (severity === "Low") {
-        lowCount++;
-    }
-
-    updateSeverityCounts();
-}
 
 

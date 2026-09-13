@@ -3,13 +3,26 @@
 #imports
 import json
 from pathlib import Path
-from fastapi import FastAPI
+from typing import Literal
 
-from Backend.database import get_ip_addresses as fetch_ip_addresses, get_security_events
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+from Backend.database import (
+    get_ip_addresses as fetch_ip_addresses,
+    get_security_events,
+    insert_security_event,
+)
 
 
 #initialize FastAPI app
 app = FastAPI()
+
+
+class SecurityEventCreate(BaseModel):
+    event_type: str
+    severity: Literal["Critical", "High", "Medium", "Low"]
+    source_ip: str
 
 #creating and loading a json file with security data
 data_file_path = Path(__file__).parent / "data.json"
@@ -30,6 +43,16 @@ def health_check():
 @app.get("/alerts")
 def get_alerts():
     return get_security_events()
+
+
+@app.post("/security-events")
+def create_security_event(event: SecurityEventCreate):
+    event_id = insert_security_event(
+        event.event_type,
+        event.severity,
+        event.source_ip,
+    )
+    return {"id": event_id, "status": "created"}
 
 
 @app.get("/IP-addresses")
