@@ -14,26 +14,4 @@ CREATE TABLE IF NOT EXISTS security_events (
     FOREIGN KEY (source_ip_id) REFERENCES ip_addresses (id)
 );
 
-INSERT OR IGNORE INTO ip_addresses (ip_address, attack_count)
-VALUES
-    ('185.199.110.42', 428),
-    ('198.51.100.24', 367),
-    ('91.240.118.16', 291),
-    ('203.0.113.50', 2),
-    ('196.168.111.56',101);
-
-INSERT INTO security_events (event_type, severity, source_ip_id)
-VALUES
-    ('Brute-force login attempt', 'Critical', 1),
-    ('Suspicious port scan', 'High', 2),
-    ('Malware signature detected', 'High', 3),
-    ('XSS', 'Low', 4),
-    ('XSS', 'Low', 4),
-    ('API injection', 'Medium', 5),
-    ('API injection', 'Medium', 5),
-    ('API injection', 'Medium', 5),
-    ('Malware signature detected', 'High', 3),
-    ('Brute-force login attempt','Critical,1);
-
-
     
