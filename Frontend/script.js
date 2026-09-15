@@ -23,6 +23,7 @@ async function loadData() {
     console.log(alerts);
     console.log(ips);
     showAlerts(alerts);
+    showAttackChart(alerts);
     showIps(ips);
 }
 
@@ -83,6 +84,69 @@ function showAlerts(alerts) {
     window.alertSummaryRotation = priorityAlerts.length > 3
         ? setInterval(renderAlertSummary, 4000)
         : undefined;
+}
+
+function showAttackChart(alerts) {
+    const attacksChartCanvas = document.getElementById("attacks-over-time-chart");
+    if (!attacksChartCanvas || typeof Chart === "undefined" || alerts.length === 0) {
+        return;
+    }
+
+    const attacksByDate = alerts.reduce((counts, alert) => {
+        const date = alert.created_at.slice(0, 10);
+        counts[date] = (counts[date] || 0) + 1;
+        return counts;
+    }, {});
+
+    const latestDate = new Date(`${alerts[0].created_at.slice(0, 10)}T00:00:00`);
+    const monday = new Date(latestDate);
+    const day = monday.getDay();
+    monday.setDate(monday.getDate() - (day === 0 ? 6 : day - 1));
+
+    const weekDates = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + index);
+        return date;
+    });
+    const labels = weekDates.map((date) =>
+        date.toLocaleDateString("en-US", { weekday: "short" })
+    );
+    const values = weekDates.map((date) => {
+        const dateKey = [
+            date.getFullYear(),
+            String(date.getMonth() + 1).padStart(2, "0"),
+            String(date.getDate()).padStart(2, "0"),
+        ].join("-");
+        return attacksByDate[dateKey] || 0;
+    });
+
+    window.attacksChart?.destroy();
+    window.attacksChart = new Chart(attacksChartCanvas, {
+        type: "line",
+        data: {
+            labels,
+            datasets: [{
+                label: "Attacks",
+                borderColor: "rgb(220, 38, 38)",
+                backgroundColor: "rgba(220, 38, 38, 0.2)",
+                pointRadius: 4,
+                pointBackgroundColor: "rgb(209, 209, 220)",
+                data: values,
+                tension: 0.3,
+                fill: true,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 },
+                },
+            },
+        },
+    });
 }
 //displaying data for from the ip table
 function showIps(ips) {

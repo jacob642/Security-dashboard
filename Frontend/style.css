@@ -194,10 +194,14 @@ h1 {
 
 .attacks-over-time {
     min-height: 400px;
+    height: 400px;
+    position: relative;
 }
 
 .attacks-over-time canvas {
+    width: 100% !important;
     height: 320px !important;
+    display: block;
 }
 
 .attacking-ips-list {
