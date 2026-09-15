@@ -1,5 +1,5 @@
 ##open this to test if api is working http://127.0.0.1:8003/docs
-
+##To restart or enable API use- uvicorn Backend.Main:app --reload --port 8003
 #imports
 import json
 from pathlib import Path
