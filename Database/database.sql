@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS security_events (
     severity TEXT NOT NULL CHECK (severity IN ('Critical', 'High', 'Medium', 'Low')),
     source_ip_id INTEGER,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    event_status TEXT NOT NULL DEFAULT 'Detected',
     FOREIGN KEY (source_ip_id) REFERENCES ip_addresses (id)
 );
+
 
     

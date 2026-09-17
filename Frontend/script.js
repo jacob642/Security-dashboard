@@ -3,7 +3,7 @@
 // fetching the security data from the backend API
 async function loadData() {
     //collecting data from security events table
-    const alertsResponse = await fetch("http://127.0.0.1:8003/alerts");
+    const alertsResponse = await fetch("/alerts");
     const alerts = await alertsResponse.json();
     // counting the each severity tag
     const severityCount = {
@@ -17,12 +17,13 @@ async function loadData() {
 });
     showSeverityCounts(severityCount);
     //collecting data from IP address table
-    const ipResponse = await fetch("http://127.0.0.1:8003/IP-addresses");
+    const ipResponse = await fetch("/IP-addresses");
     const ips = await ipResponse.json();
     // logging the two outputs
     console.log(alerts);
     console.log(ips);
     showAlerts(alerts);
+    showEventLogs(alerts);
     showAttackChart(alerts);
     showIps(ips);
 }
@@ -84,6 +85,21 @@ function showAlerts(alerts) {
     window.alertSummaryRotation = priorityAlerts.length > 3
         ? setInterval(renderAlertSummary, 4000)
         : undefined;
+}
+
+function showEventLogs(alerts) {
+    const eventLogsList = document.getElementById("event-logs-list");
+
+    eventLogsList.innerHTML = alerts.map((event) => `
+        <div class="event-log-row">
+            <time>${event.created_at}</time>
+            <div>
+                <strong>${event.event_type}</strong>
+                <span>${event.source_ip}</span>
+            </div>
+            <span class="event-log-result ${event.event_status.toLowerCase()}">${event.event_status}</span>
+        </div>
+    `).join("");
 }
 
 function showAttackChart(alerts) {

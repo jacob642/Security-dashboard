@@ -7,6 +7,7 @@ from typing import Literal
 
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 
 from Backend.database import (
     get_ip_addresses as fetch_ip_addresses,
@@ -18,11 +19,14 @@ from Backend.database import (
 #initialize FastAPI app
 app = FastAPI()
 
+#mounting the frontend using staticfiles
+frontend_path = Path(__file__).resolve().parent.parent / "Frontend"
 
 class SecurityEventCreate(BaseModel):
     event_type: str
     severity: Literal["Critical", "High", "Medium", "Low"]
     source_ip: str
+    event_status: Literal["Failed", "Breached", "Detected"] = "Detected"
 
 #creating and loading a json file with security data
 data_file_path = Path(__file__).parent / "data.json"
@@ -51,6 +55,7 @@ def create_security_event(event: SecurityEventCreate):
         event.event_type,
         event.severity,
         event.source_ip,
+        event.event_status,
     )
     return {"id": event_id, "status": "created"}
 
@@ -58,3 +63,10 @@ def create_security_event(event: SecurityEventCreate):
 @app.get("/IP-addresses")
 def get_ip_addresses():
     return fetch_ip_addresses()
+
+
+app.mount(
+    "/",
+    StaticFiles(directory=frontend_path, html=True),
+    name="frontend",
+)
