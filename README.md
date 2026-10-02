@@ -108,6 +108,41 @@ Database/security.db
 
 The backend also checks for schema compatibility at runtime and adds the event_status column if it is missing.
 
+### Connecting from a custom Python script
+
+The application already connects to SQLite through [Backend/database.py](Backend/database.py); you do not need a separate script to run the dashboard. To read events from your own Python code, create `connect_database.py` in the project root with the following contents:
+
+```python
+import sqlite3
+from pathlib import Path
+
+database_path = Path(__file__).resolve().parent / "Database" / "security.db"
+if not database_path.exists():
+  raise FileNotFoundError(f"Database not found: {database_path}")
+
+with sqlite3.connect(database_path) as connection:
+  connection.row_factory = sqlite3.Row
+  events = connection.execute(
+    """
+    SELECT security_events.id, security_events.event_type,
+         security_events.severity, ip_addresses.ip_address AS source_ip,
+         security_events.created_at, security_events.event_status
+    FROM security_events
+    LEFT JOIN ip_addresses ON ip_addresses.id = security_events.source_ip_id
+    ORDER BY security_events.created_at DESC
+    """
+  ).fetchall()
+
+for event in events:
+  print(dict(event))
+```
+
+Run it from the project root (or any directory) with:
+
+```bash
+python connect_database.py
+```
+
 ## Running the Application
 
 From the project root, start the FastAPI server:
